@@ -1,0 +1,15 @@
+apiVersion: contextos/v1
+kind: Agent
+
+metadata:
+  id: "00000000-0000-4000-8000-000000000001"
+  name: research-agent
+  version: 1.0.0
+
+spec:
+  description: Research assistant
+  instructions: |
+    Research the requested topic.
+    Provide evidence-based answers.
+
+extensions: {}
