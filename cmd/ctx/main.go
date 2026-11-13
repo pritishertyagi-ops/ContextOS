@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/pritishertyagi-ops/ContextOS/internal/assets"
+	"github.com/pritishertyagi-ops/ContextOS/internal/canonical"
 	"github.com/pritishertyagi-ops/ContextOS/internal/validation"
 )
 
@@ -14,7 +15,7 @@ const version = "0.1.0-dev"
 
 func main() {
 	if err := run(os.Args[1:]); err != nil {
-		fmt.Fprintln(os.Stderr, "Error:", err)
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
 }
@@ -75,9 +76,15 @@ func runAsset(args []string) error {
 		return fmt.Errorf("agent validation failed: %w", err)
 	}
 
+	hash, err := canonical.Hash(value)
+	if err != nil {
+		return fmt.Errorf("asset fingerprint failed: %w", err)
+	}
+
 	fmt.Println("Asset validation successful")
 	fmt.Println("File:", filePath)
 	fmt.Println("Format:", format)
+	fmt.Println("SHA-256:", hash)
 
 	return nil
 }
@@ -89,7 +96,7 @@ func printUsage() {
 	fmt.Println("  ctx <command>")
 	fmt.Println()
 	fmt.Println("Commands:")
-	fmt.Println("  version                         Print version")
-	fmt.Println("  help                            Show help")
-	fmt.Println("  asset validate <file>           Validate an asset")
+	fmt.Println("  version           Print version")
+	fmt.Println("  help              Show help")
+	fmt.Println("  asset validate    Validate and fingerprint an asset")
 }
